@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<project
+		name="build.ant4eclipse"
+		xmlns:ivy="antlib:org.apache.ivy.ant"
+		xmlns:ant4eclipse="antlib:org.ant4eclipse">
+
+	<!-- SETTINGS START -->
+	<property name="a4e.dir" value="${basedir}/../eclipse-headless-builder/ant4eclipse" />
+	<property name="tp.dir" value="${basedir}/../eclipse-headless-builder/target.platform" />
+	<property name="ivy.dir" value="${basedir}/../eclipse-headless-builder/lib" />
+
+	<property name="ivy.install.version" value="2.2.0" />
+	<property name="ivy.jar.file" value="${ivy.dir}/ivy-${ivy.install.version}.jar" />
+	<!-- SETTINGS END -->
+	
+	
+	<!-- import the ant4eclipse pde macros -->
+	<import file="${a4e.dir}/macros/a4e-pde-macros.xml" />
+ 
+	<macrodef name="download-ivy">
+		<sequential>
+			<echo message="downloading ivy..."/>
+			<mkdir dir="${ivy.dir}"/>
+			<get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+					dest="${ivy.jar.file}" usetimestamp="true"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="setup-ivy">
+		<sequential>
+			<download-ivy/>
+			<echo message="setup ivy..."/>
+			
+			<!-- define ivy tasks -->
+			<path id="ivy.lib.path">
+				<fileset dir="${ivy.dir}" includes="*.jar"/>
+			</path>
+			<taskdef resource="org/apache/ivy/ant/antlib.xml"
+					uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="setup-a4e">
+		<sequential>
+			<echo message="setup ant4eclipse..."/>
+				
+			<!-- define ant4eclipse tasks -->
+			<taskdef resource="org/ant4eclipse/antlib.xml"
+				 uri="antlib:org.ant4eclipse" />
+			<taskdef resource="net/sf/antcontrib/antlib.xml"
+					uri="antlib:net.sf.antcontrib" />
+		 
+			<ant4eclipse:installedJREs>
+				<jre id="jdk" location="${java.home}" />
+			</ant4eclipse:installedJREs>
+	 
+			<!-- define the target platform location -->
+			<ant4eclipse:targetPlatform id="carbon.target.platform">
+				<location dir="${tp.dir}/eclipse-SWT-dummy" />
+				<location dir="${tp.dir}/eclipse-platform-SDK-3.3-macosx-carbon" />
+				<location dir="${tp.dir}/eclipse-JDT-SDK-3.3-all" />
+				<location dir="${tp.dir}/GEF-SDK-3.3" />
+			</ant4eclipse:targetPlatform>
+			<!--
+			<ant4eclipse:targetPlatform id="win32.target.platform">
+				<location dir="target.platform/eclipse-SWT-dummy" />
+				<location dir="target.platform/eclipse-platform-SDK-3.3-win32" />
+				<location dir="target.platform/eclipse-JDT-SDK-3.3-all" />
+				<location dir="target.platform/GEF-SDK-3.3" />
+			</ant4eclipse:targetPlatform>
+			-->
+		</sequential>
+	</macrodef>
+
+	<macrodef name="clean-ivy">
+		<sequential>
+			<echo message="clean ivy jar..."/>
+		    <delete dir="${ivy.dir}"/>
+		</sequential>
+	  </macrodef>
+
+	<macrodef name="clean-cache">
+		<sequential>
+			<setup-ivy/>
+			<echo message="clean ivy cache..."/>
+		    <ivy:cleancache />
+		</sequential>
+	</macrodef>
+
+</project>
