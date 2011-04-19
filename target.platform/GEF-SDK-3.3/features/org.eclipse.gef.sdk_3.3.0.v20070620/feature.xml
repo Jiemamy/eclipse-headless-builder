@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.gef.sdk"
+      label="%featureName"
+      version="3.3.0.v20070620"
+      provider-name="%providerName"
+      plugin="org.eclipse.gef.source"
+      image="eclipse_update_120.jpg">
+
+   <description>
+      %description
+   </description>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/tools/gef/update-site/releases/site.xml"/>
+   </url>
+
+   <includes
+         id="org.eclipse.gef"
+         version="3.3.0.v20070620"/>
+
+   <includes
+         id="org.eclipse.gef.source"
+         version="3.3.0.v20070620"/>
+
+   <plugin
+         id="org.eclipse.gef.examples.ui.pde"
+         download-size="0"
+         install-size="0"
+         version="3.3.0.v20070529"
+         unpack="false"/>
+
+</feature>
